@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.login.demologin.common.CommonResult;
 import com.login.demologin.entity.User;
 import com.login.demologin.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,9 @@ public class LoginController {
 
     @Resource
     private UserServiceImpl userService;
+
+    @Value("${jwt.config.secret}")
+    private String secret;
     /**
      * 用户登录
      * @param username
@@ -39,8 +43,10 @@ public class LoginController {
                 .create()
                 .withAudience()
                 .withIssuedAt(start)
+                .withClaim("name",username)
+                .withClaim("password",password)
                 .withExpiresAt(end)
-                .sign(Algorithm.HMAC256(password));
+                .sign(Algorithm.HMAC256(secret));
         return CommonResult.builder().code(200).data(sign).build();
     }
 

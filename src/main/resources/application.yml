@@ -24,3 +24,7 @@ mybatis-plus:
     global-config:
         db-config:
             id-type: auto
+jwt:
+    config:
+        secret: token!Q@W#E$R
+
